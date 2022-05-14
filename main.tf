@@ -3,11 +3,11 @@ resource "aws_lightsail_instance" "bl_lightsail" {
   name              = "bl-us"
   availability_zone = "us-west-2a"
   blueprint_id      = "debian_10"
-  bundle_id         = "medium_2_0"
+  bundle_id         = "small_2_0"
   key_pair_name     = "id_ed25519"
 }
 
-resource "aws_lightsail_static_ip_attachment" "tbl_lightsail" {
+resource "aws_lightsail_static_ip_attachment" "bl_lightsail" {
   static_ip_name = aws_lightsail_static_ip.bl_lightsail.id
   instance_name  = aws_lightsail_instance.bl_lightsail.id
 }

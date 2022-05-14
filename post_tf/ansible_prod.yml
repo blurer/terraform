@@ -1,0 +1,60 @@
+--- # All setup
+- hosts: lightsail
+  become: yes
+  user: bl
+  gather_facts: false
+  tasks:
+  - name: docker - mkdir
+    ansible.builtin.file:
+      path: /opt/docker/
+      state: directory
+      owner: bl
+      group: bl
+  - name: proxy - mkdir
+    ansible.builtin.file:
+      path: /opt/docker/proxy
+      state: directory
+      owner: bl
+      group: bl
+  - name: dns - mkdir
+    ansible.builtin.file:
+      path: /opt/docker/dns
+      state: directory
+      owner: bl
+      group: bl
+  - name: dns - get compose file
+    get_url: 
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/dns.yml 
+      dest: /opt/docker/dns/
+  - name: proxy - get compose file
+    get_url: 
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/proxy.yml 
+      dest: /opt/docker/proxy/
+  - name: dns - bring it up
+    shell: cd /opt/docker/dns && mv dns.yml docker-compose.yml && docker-compose up -d
+  - name: proxy - bring it up
+    shell: cd /opt/docker/proxy && mv proxy.yml docker-compose.yml && docker-compose up -d
+  - name: pivpn - curl
+    get_url:
+      url: https://install.pivpn.io
+      dest: /home/bl/
+  - name: pivpn - get config
+    get_url:
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/options.conf
+      dest: /home/bl/
+  - name: pivpn - curl
+    get_url:
+      url: https://install.pivpn.io
+      dest: /home/bl/
+  - name: pivpn - get config
+    get_url:
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/options.conf
+      dest: /home/bl/
+  - name: pivpn - install
+    shell: chmod +x install.sh && ./install.sh --unattended options.conf
+  - name: pivpn - bl-iphone
+    shell: pivpn -a -n bl-iphone
+  - name: pivpn - bl-ipad
+    shell: pivpn -a -n bl-ipad
+  - name: pivpn - bl-lt
+    shell: pivpn -a -n bl-lt

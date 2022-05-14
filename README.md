@@ -207,28 +207,24 @@ host aws-us
         identityfile /home/bl/.ssh/id_ed25519
 ```
 
-``ansible_bl.yml`` will install base system tools. You can monitor the progress via ansible or ssh to the host and run ``sudo tail -f /var/log/apt/term.log``
+ You can monitor the progress via ansible or ssh to the host and run ``sudo tail -f /var/log/apt/term.log``
 
-```
-$ ansible-playbook ansible_bl.yml
+``ansible_base.yml``
+This ansible file does the following:
+- Updates the system
+- Installs base tools
+- Installs docker
+- Starts docker service at boot
+- Installs docker compose
+- Adds new user (bl)
+- Pulls ssh keys for user
 
-PLAY [lightsail] *********************************************************************************************
-TASK [Gathering Facts] ***************************************************************************************[WARNING]: Platform linux on host aws-us is using the discovered Python interpreter at /usr/bin/python, but
-future installation of another Python interpreter could change this. See
-https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
-ok: [aws-us]
+``ansible_prod.yml``
+- Changes ssh user to bl
+- Creates a /home/bl/docker/ directory
+- Starts PiHole docker container
+- Starts NginxProxyManager docker container
+- Starts Portainer docker container
+- Installs pivpn wireguard
+- Creates bl-iphone, bl-ipad, bl-lt wireguard profiles
 
-TASK [Update apt-cache] **************************************************************************************[WARNING]: Updating cache and auto-installing missing dependency: python-apt
-ok: [aws-us]
-
-TASK [Update apt-cache packages] *****************************************************************************changed: [aws-us]
-
-TASK [Apt autoremove] ****************************************************************************************
-ok: [aws-us]
-
-TASK [Standard packages] *************************************************************************************
-changed: [aws-us]
-
-PLAY RECAP ***************************************************************************************************
-aws-us                     : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-```

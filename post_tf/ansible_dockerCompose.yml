@@ -1,0 +1,8 @@
+--- # Install Docker Compose
+- hosts: lightsail
+  become: yes
+  tasks:
+  - name: Install Docker Compose
+    apt:
+      pkg: 
+      - docker-compose

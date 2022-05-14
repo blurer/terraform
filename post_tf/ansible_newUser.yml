@@ -1,0 +1,40 @@
+--- # Add user
+- hosts: lightsail
+  become: yes
+  tasks:
+  - name: Add the user BL with sudo
+    ansible.builtin.user:
+      name: bl
+      comment: bl
+      group: sudo
+      shell: /bin/bash
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+      expires: -1
+      createhome: yes
+  - name: Add ssh keys to BL
+    authorized_key:
+      user: bl
+      state: present
+      key: https://raw.githubusercontent.com/blurer/myBS/main/authorized_keys
+  - name: sudoers edit
+    shell: echo "bl ALL=(ALL) NOPASSWD:ALL" >> sudo /etc/sudoers.d/90-cloud-init-users
+  - name: Install Docker
+    shell: cd ~ && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && sudo usermod -aG docker bl
+  - name: Install Docker Compose
+    apt:
+      pkg: 
+      - docker-compose
+  - name: [dns] mkdir & cd
+    shell: mkdir /opt/docker/dns && cd /opt/docker/dns
+  - name: [dns] get compose file
+    shell: get_url https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/dns.yml 
+  - name: [dns] bring it up
+    shell: mv dns.yml docker-compose.yml && docker-compose up -d
+  - name: [proxy] mkdir & cd
+    shell: mkdir /opt/docker/proxy && cd /opt/docker/proxy
+  - name: [proxy] get compose file
+    shell: get_url https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/proxy.yml 
+  - name: [proxy]] bring it up
+    shell: mv proxy.yml docker-compose.yml && docker-compose up -d

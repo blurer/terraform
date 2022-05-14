@@ -1,0 +1,22 @@
+--- # All setup
+- hosts: lightsail
+  become: yes
+  user: bl
+  gather_facts: false
+  tasks:
+  - name: pivpn - curl
+    get_url:
+      url: https://install.pivpn.io
+      dest: /home/bl/
+  - name: pivpn - get config
+    get_url:
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/options.conf
+      dest: /home/bl/
+  - name: pivpn - install
+    shell: chmod +x install.sh && ./install.sh --unattended options.conf
+  - name: pivpn - bl-iphone
+    shell: pivpn -a -n bl-iphone
+  - name: pivpn - bl-ipad
+    shell: pivpn -a -n bl-iphone
+  - name: pivpn - bl-lt
+    shell: pivpn -a -n bl-lt

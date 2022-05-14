@@ -1,0 +1,9 @@
+--- # Add keys
+- hosts: lightsail
+  become: yes
+  tasks:
+  - name: Add ssh keys to BL
+    authorized_key:
+      user: bl
+      state: present
+      key: https://raw.githubusercontent.com/blurer/myBS/main/authorized_keys

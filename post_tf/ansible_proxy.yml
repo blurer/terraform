@@ -1,0 +1,17 @@
+--- # All setup
+- hosts: lightsail
+  become: yes
+  user: bl
+  tasks:
+  - name: proxy - mkdir
+    ansible.builtin.file:
+      path: /opt/docker/proxy
+      state: directory
+      owner: bl
+      group: bl
+  - name: proxy - get compose file
+    get_url: 
+      url: https://raw.githubusercontent.com/blurer/Homelab-Setup/main/files/proxy.yml 
+      dest: /opt/docker/proxy/
+  - name: proxy - bring it up
+    shell: cd /opt/docker/proxy && mv proxy.yml docker-compose.yml && docker-compose up -d
