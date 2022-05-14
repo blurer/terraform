@@ -1,0 +1,29 @@
+--- # BL
+- hosts: lightsail
+  become: yes
+  tasks:
+  - name: Update apt-cache
+    apt:
+      update_cache: yes
+      force_apt_get: True
+  - name: Update apt-cache packages
+    apt:
+      name: "*"
+      state: latest
+      force_apt_get: True
+  - name: Apt autoremove
+    apt:
+      autoremove: yes
+      force_apt_get: True
+  - name: Standard packages
+    apt:
+      pkg: 
+      - htop
+      - vim
+      - git
+      - curl
+      - unzip
+      - dnsutils
+      - python3-pip
+      - python3-setuptools
+      - fail2ban
