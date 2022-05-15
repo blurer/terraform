@@ -1,5 +1,5 @@
 --- # Update and tools
-- hosts: lightsail
+- hosts: dns
   become: yes
   tasks:
   - name: Update apt-cache
@@ -26,4 +26,3 @@
       - dnsutils
       - python3-pip
       - python3-setuptools
-      - fail2ban
